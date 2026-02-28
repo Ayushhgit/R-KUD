@@ -1,0 +1,25 @@
+﻿================================================================================
+  RPKOE DIGITAL TWIN MARKETPLACE SIMULATION
+  500 merchants | 20,000 orders | 20 Monte Carlo runs
+================================================================================
+uv : Traceback (most recent call last):
+At line:1 char:1
++ uv run python simulation/digital_twin.py 2>&1 | Out-File -Encoding ut ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call 
+last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\KIIT0001\Desktop\R-kud\simulation\digital_twin.py", line 940, 
+in <module>
+    main()
+  File "C:\Users\KIIT0001\Desktop\R-kud\simulation\digital_twin.py", line 913, 
+in main
+    print("\n\U0001f3ac Phase 1: Running single simulation for detailed 
+analysis...")
+  File "C:\Users\KIIT0001\AppData\Local\Programs\Python\Python311\Lib\encodings\
+cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f3ac' in 
+position 2: character maps to <undefined>
