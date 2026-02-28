@@ -1,25 +1,194 @@
-﻿================================================================================
-  RPKOE DIGITAL TWIN MARKETPLACE SIMULATION
-  500 merchants | 20,000 orders | 20 Monte Carlo runs
-================================================================================
-uv : Traceback (most recent call last):
-At line:1 char:1
-+ uv run python simulation/digital_twin.py 2>&1 | Out-File -Encoding ut ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (Traceback (most recent call 
-last)::String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-  File "C:\Users\KIIT0001\Desktop\R-kud\simulation\digital_twin.py", line 940, 
-in <module>
-    main()
-  File "C:\Users\KIIT0001\Desktop\R-kud\simulation\digital_twin.py", line 913, 
-in main
-    print("\n\U0001f3ac Phase 1: Running single simulation for detailed 
-analysis...")
-  File "C:\Users\KIIT0001\AppData\Local\Programs\Python\Python311\Lib\encodings\
-cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f3ac' in 
-position 2: character maps to <undefined>
+==========================================================================================
+  RPKOE DIGITAL TWIN SIMULATION -- COMPARATIVE ANALYSIS REPORT
+  500 merchants | 20,000 orders/run | 20 Monte Carlo runs | Fixed seed baseline
+==========================================================================================
+
+[TABLE] COMPARISON TABLE (Mean over 20 Monte Carlo runs)
+------------------------------------------------------------------------------------------
+Metric                           Baseline      RPKOE      Delta     %Chg    p-value  Sig?
+------------------------------------------------------------------------------------------
+rider_wait_mean                    8.9159     7.8844    -1.0315  -11.57%     0.0000   YES
+rider_wait_p50                     8.5371     7.1376    -1.3995  -16.39%     0.0000   YES
+rider_wait_p90                    17.3143    16.0978    -1.2165   -7.03%     0.0000   YES
+rider_wait_p95                    20.6447    19.5564    -1.0882   -5.27%     0.0000   YES
+eta_error_mean                     3.5128     3.7987    +0.2859   +8.14%     0.0000   YES
+eta_error_p50                      2.7408     3.0284    +0.2875  +10.49%     0.0000   YES
+eta_error_p90                      7.4884     8.0379    +0.5495   +7.34%     0.0000   YES
+late_rate_3min                     0.7823     0.7501    -0.0322   -4.12%     0.0000   YES
+late_rate_5min                     0.7039     0.6381    -0.0658   -9.35%     0.0000   YES
+food_wait_mean                     0.8475     0.8522    +0.0047   +0.56%     0.4249    NO
+safety_buffer_mean                 3.0000    14.0391   +11.0391 +367.97%     0.0000   YES
+assign_delay_mean                  0.0000     1.0362    +1.0362   +0.00%     0.0000   YES
+dispatch_cost_mean                10.0893     9.0095    -1.0798  -10.70%     0.0000   YES
+decision_volatility_mean           0.0000     2.0184    +2.0184   +0.00%     0.0000   YES
+------------------------------------------------------------------------------------------
+
+[CI] 95% CONFIDENCE INTERVALS ON DIFFERENCE (RPKOE - Baseline)
+------------------------------------------------------------------------------------------
+  rider_wait_mean                Delta = -1.0315   95% CI: [-1.0823, -0.9482]
+  rider_wait_p50                 Delta = -1.3995   95% CI: [-1.4679, -1.2758]
+  rider_wait_p90                 Delta = -1.2165   95% CI: [-1.3372, -1.0564]
+  rider_wait_p95                 Delta = -1.0882   95% CI: [-1.2048, -0.8396]
+  eta_error_mean                 Delta = +0.2859   95% CI: [+0.2573, +0.3068]
+  eta_error_p50                  Delta = +0.2875   95% CI: [+0.2546, +0.3164]
+  eta_error_p90                  Delta = +0.5495   95% CI: [+0.4816, +0.6585]
+  late_rate_3min                 Delta = -0.0322   95% CI: [-0.0347, -0.0286]
+  late_rate_5min                 Delta = -0.0658   95% CI: [-0.0697, -0.0591]
+  food_wait_mean                 Delta = +0.0047   95% CI: [+0.0032, +0.0064]
+  safety_buffer_mean             Delta = +11.0391   95% CI: [+10.5271, +11.5879]
+  assign_delay_mean              Delta = +1.0362   95% CI: [+0.9514, +1.0876]
+  dispatch_cost_mean             Delta = -1.0798   95% CI: [-1.1340, -0.9918]
+  decision_volatility_mean       Delta = +2.0184   95% CI: [+1.9227, +2.0913]
+
+[STATS] STATISTICAL SIGNIFICANCE SUMMARY
+------------------------------------------------------------------------------------------
+  Metrics with significant difference (p < 0.05): 13/14
+  Metrics WITHOUT significant difference:         1/14
+
+  Significant improvements (RPKOE lower = better):
+    [-] rider_wait_mean                 11.57% reduction  (p=0.0000)
+    [-] rider_wait_p50                  16.39% reduction  (p=0.0000)
+    [-] rider_wait_p90                   7.03% reduction  (p=0.0000)
+    [-] rider_wait_p95                   5.27% reduction  (p=0.0000)
+    [-] late_rate_3min                   4.12% reduction  (p=0.0000)
+    [-] late_rate_5min                   9.35% reduction  (p=0.0000)
+    [-] dispatch_cost_mean              10.70% reduction  (p=0.0000)
+
+  Significant tradeoffs (RPKOE higher = worse):
+    [+] eta_error_mean                   8.14% increase   (p=0.0000)
+    [+] eta_error_p50                   10.49% increase   (p=0.0000)
+    [+] eta_error_p90                    7.34% increase   (p=0.0000)
+    [+] safety_buffer_mean             367.97% increase   (p=0.0000)
+    [+] assign_delay_mean                0.00% increase   (p=0.0000)
+    [+] decision_volatility_mean         0.00% increase   (p=0.0000)
+
+  No significant difference:
+    [=] food_wait_mean                  +0.56%  (p=0.4249)
+
+[CALIB] CALIBRATION SUMMARY
+------------------------------------------------------------------------------------------
+  P90 Coverage (mean over 20 runs): 0.9568  (target: 0.9000)
+  P90 Coverage range:               [0.9543, 0.9605]
+  Calibration Error (mean):          +0.0568
+  Calibration Error range:           [+0.0543, +0.0605]
+  Status: WELL CALIBRATED (mean error within 10%)
+
+[VOLATILE] DECISION VOLATILITY
+------------------------------------------------------------------------------------------
+  RPKOE Decision Volatility (mean): 2.0184
+  RPKOE Decision Volatility range:  [1.8846, 2.1152]
+  Baseline Decision Volatility:     0.0000 (fixed buffer, no variation)
+
+  Interpretation: RPKOE introduces decision variability by design.
+  This is the cost of adaptive dispatch -- decisions depend on state.
+
+  Congestion Volatility (mean): 0.0907
+  Congestion Volatility range:  [0.0842, 0.0969]
+
+==========================================================================================
+  TRADEOFF ANALYSIS
+==========================================================================================
+
+  1. RIDER WAIT vs ETA ACCURACY
+  ------------------------------------------------------------
+     Rider wait mean:  -11.57%  (RPKOE wins)
+     ETA error mean:   +8.14%  (Baseline wins)
+
+     WHY: RPKOE uses wider probabilistic intervals to capture
+     uncertainty. This makes point predictions less accurate
+     (higher ETA error) but the DECISION is better because the
+     safety buffer adapts to uncertainty. You trade prediction
+     accuracy for decision quality.
+
+  2. SAFETY BUFFER: FIXED vs ADAPTIVE
+  ------------------------------------------------------------
+     Baseline buffer:  3.0 min (fixed)
+     RPKOE buffer:     14.0 min (adaptive, mean)
+     Change:           +368.0%
+
+     WHY: RPKOE's adaptive buffer is larger on average because it
+     accounts for merchant-specific uncertainty (KPT std, KVI, MRI).
+     But it varies per order: reliable merchants get SMALLER buffers,
+     unreliable merchants get LARGER buffers. The fixed 3-min buffer
+     is insufficient for unreliable merchants and wasteful for
+     reliable ones.
+
+  3. DISPATCH COST: THE BOTTOM LINE
+  ------------------------------------------------------------
+     Dispatch cost:    -10.70%  (RPKOE wins)
+
+     Dispatch cost = rider_wait + lambda * late_penalty
+     Despite higher ETA error, RPKOE achieves lower total cost
+     because it reduces the EXPENSIVE outcomes (long waits, late
+     arrivals) at the expense of slightly less precise point ETAs.
+
+  4. LATE ARRIVAL RATES
+  ------------------------------------------------------------
+     Late >3min rate:  -4.12%  (RPKOE wins)
+     Late >5min rate:  -9.35%  (RPKOE wins)
+
+     RPKOE reduces BOTH late thresholds. The improvement is
+     stronger at >5min (-9.35%) than >3min (-4.12%), meaning
+     RPKOE is especially effective at preventing the worst cases.
+
+  5. FOOD WAIT (FOOD SITTING ON RACK)
+  ------------------------------------------------------------
+     Food wait:        +0.56%  (p=0.4249)
+     NOT SIGNIFICANT -- No meaningful difference.
+
+     Food wait (food ready but rider not there yet) is similar
+     for both systems. RPKOE does not significantly increase the
+     time food sits waiting. This is important: RPKOE delays rider
+     assignment but the food does NOT wait longer on the rack.
+
+  6. DECISION VOLATILITY vs DISPATCH QUALITY
+  ------------------------------------------------------------
+     Decision volatility: 2.02  (Baseline = 0.00)
+
+     Baseline has zero volatility because every decision uses the
+     same fixed buffer. RPKOE decisions vary because they adapt
+     to congestion, reliability, and supply. This is EXPECTED and
+     DESIRABLE -- but needs monitoring to detect model instability
+     vs healthy adaptation.
+
+  7. ASSIGNMENT DELAY
+  ------------------------------------------------------------
+     RPKOE assign delay: 1.04 min (Baseline = 0.00)
+
+     RPKOE intentionally DELAYS rider assignment (mean ~1 min)
+     so the rider arrives closer to when food is ready. This is
+     the primary mechanism for reducing rider wait time. The delay
+     is computed = max(0, E[KPT] - travel_time - buffer).
+
+==========================================================================================
+  SUMMARY: WHAT RPKOE DOES BETTER AND WORSE
+==========================================================================================
+
+  BETTER (statistically significant):
+    - Rider wait mean:    -11.57%
+    - Rider wait P50:     -16.39%
+    - Rider wait P90:      -7.03%
+    - Late rate (>3min):   -4.12%
+    - Late rate (>5min):   -9.35%
+    - Dispatch cost:      -10.70%
+
+  WORSE (statistically significant tradeoffs):
+    - ETA error mean:      +8.14%  (point prediction less accurate)
+    - ETA error P50:      +10.49%
+    - ETA error P90:       +7.34%
+    - Safety buffer mean: +367.97% (larger adaptive buffers)
+    - Decision volatility: introduced (non-zero)
+
+  NEUTRAL (no significant difference):
+    - Food wait (food on rack): +0.56%  (p=0.42, not significant)
+
+  CORE INSIGHT:
+    RPKOE trades PREDICTION ACCURACY for DECISION QUALITY.
+    The point ETA is less precise, but the dispatch decision is
+    better because it incorporates uncertainty into the buffer
+    and timing calculation. The system optimizes for the OUTCOME
+    (rider wait, late arrivals, cost) not the PREDICTION.
+
+==========================================================================================
+  END OF REPORT
+==========================================================================================
